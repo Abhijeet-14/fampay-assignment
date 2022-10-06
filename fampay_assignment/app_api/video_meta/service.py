@@ -150,9 +150,9 @@ def get_youtube_video_from_YT_Developer_API():
         type = constants.SEARCH_TYPE
         max_results = constants.SEARCH_MAX_RESULT
 
-        search_query = "tea"
-
         api_key = os.environ.get(constants.API_KEY)
+        search_query = os.environ.get(constants.SEARCH_QUERY_KEYWORD)
+
         url =  f"{base_url}?part={part}&type={type}&maxResults={max_results}&q={search_query}&key={api_key}"
 
         logger.info("Calling Youtube Data API v3 for search !")
