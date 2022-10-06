@@ -126,6 +126,11 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+REST_FRAMEWORK = {
+    "EXCEPTION_HANDLER": "exceptions.CustomExceptions.custom_exception_handler"
+}
+
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -150,6 +155,14 @@ LOGGING = {
             "level": "CRITICAL",
         },
         "fampay_assignment": {
+            "handlers": ["all_logs"],
+            "level": "DEBUG",
+        },
+        "common": {
+            "handlers": ["all_logs"],
+            "level": "DEBUG",
+        },
+        "exceptions": {
             "handlers": ["all_logs"],
             "level": "DEBUG",
         },
