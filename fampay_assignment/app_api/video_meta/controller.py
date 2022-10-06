@@ -8,7 +8,7 @@ from rest_framework import status
 from common.common_function import custom_logger, get_func_name
 from exceptions.CustomExceptions import formattedException
 
-from .service import add_youtube_video, get_youtube_video_list
+from .service import add_youtube_video, get_youtube_video_list, search_video_by_title_or_description
 
 logger = custom_logger(__name__)
 
