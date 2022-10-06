@@ -105,6 +105,7 @@ def get_youtube_video_data_list():
         api_key = os.environ.get(constants.API_KEY)
         url =  f"{base_url}?part={part}&type={type}&maxResults={max_results}&q={search_query}&key={api_key}"
 
+        logger.info("Calling Youtube Data API v3 for search !")
         response = requests.get(url)
 
         status_code = response.status_code
@@ -114,7 +115,8 @@ def get_youtube_video_data_list():
             logger.error(f"{status_code} :: {response.text}")
 
         result = response.json()
-
+        logger.debug(f"No of videos: {len(result)}")
+        
         final_result = []
         for val in result.get('items'):
             val = val.get('snippet')
