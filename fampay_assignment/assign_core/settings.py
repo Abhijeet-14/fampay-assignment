@@ -124,3 +124,45 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler", 
+            "formatter": "simple-console"
+        },
+        "all_logs": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": "./fampay_assignment/logs/all_logs.log",
+            "formatter": "verbose-file",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["all_logs"],
+            "level": "INFO",
+        },
+        "django.utils.autoreload": {
+            "level": "CRITICAL",
+        },
+        "fampay_assignment": {
+            "handlers": ["all_logs"],
+            "level": "DEBUG",
+        },
+        "root": {"handlers": ["console"], "level": "DEBUG"},
+    },
+    "formatters": {
+        "verbose-file": {
+            "format": "[{levelname}] [{asctime}] [L{lineno}] [FILE:{filename}] [FUNC:{funcName}] [{name}] - {message}",
+            "style": "{",
+        },
+        "simple-console": {
+            "format": "[{levelname}] [L{lineno}] [FILE:{filename}] [{name}] - {message}",
+            "style": "{",
+        },
+    },
+}
