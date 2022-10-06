@@ -64,8 +64,8 @@ def add_youtube_video():
         videos_meta_list_response = get_youtube_video_data_list()
 
         bulk_insert_video_list = []
+        
         for video in videos_meta_list_response:
-            logger.info(video)
             instance = YouTubeVideo(
                 title =video.get('title'),
                 description =video.get('description'),
