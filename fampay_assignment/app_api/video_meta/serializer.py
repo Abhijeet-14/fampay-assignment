@@ -8,6 +8,9 @@ class GetYouTubeVideoSerializer(serializers.Serializer):
     limit = serializers.IntegerField(required=False, default=25)
     offset = serializers.IntegerField(required=False, default=0)
 
+    title = serializers.CharField(required=False)
+    description = serializers.CharField(required=False)
+
 class YouTubeVideoModelSerializer(serializers.ModelSerializer):
 
     class Meta:
