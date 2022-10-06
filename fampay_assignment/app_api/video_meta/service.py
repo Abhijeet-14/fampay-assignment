@@ -22,11 +22,10 @@ def get_youtube_video_list(request):
         logger.info(f"Enter : {func_name}")
 
         request_serializer = GetYouTubeVideoSerializer(data=request.GET)
-        serializer_name = "Add Video's Meta Data to DB"
+        serializer_name = "Get YouTube Video Data from DB"
 
         if not request_serializer.is_valid():
             logger.error(f"{serializer_name} :: Serializer error :: {request_serializer.errors}")
-            logger.info("Exiting Check Serializer()")
 
             raise CustomApiException(
                 f"Inputs value are invalid or few input fields are missing :: {list(request_serializer.errors.keys())}",
@@ -55,13 +54,64 @@ def get_youtube_video_list(request):
         raise err
 
 
+def search_video_by_title_or_description(request):
+    func_name = get_func_name(inspect.currentframe())
+    try:
+        logger.info(f"Enter : {func_name}")
+    
+        request_serializer = GetYouTubeVideoSerializer(data=request.GET)
+        serializer_name = "Search YT Video from DB on Title and Description"
+
+        if not request_serializer.is_valid():
+            logger.error(f"{serializer_name} :: Serializer error :: {request_serializer.errors}")
+
+            raise CustomApiException(
+                f"Inputs value are invalid or few input fields are missing :: {list(request_serializer.errors.keys())}",
+                status.HTTP_400_BAD_REQUEST
+            )
+            
+        validate_data = dict(request_serializer.validated_data)
+
+        offset = validate_data.get('offset')
+        limit = validate_data.get('limit')
+
+        title = validate_data.get('title')
+        description = validate_data.get('description')
+
+        logger.info(f"Filter Query on Video stored in DB with title {title} OR description {description} by using like command %title%")
+
+        all_video_meta = ""
+
+        if title is not None:
+            logger.debug("Title is not None")
+            all_video_meta = YouTubeVideo.objects.filter(title__contains = title) 
+
+        if description is not None:
+            logger.debug("Description is not None")
+            all_video_meta += YouTubeVideo.objects.filter(description__contains = description)
+        
+        logger.debug("Combining the matched video with title & description & apply offset & limit")
+        all_video_meta = all_video_meta[offset: offset + limit] 
+
+        # Response Serializer
+        response_serializer = YouTubeVideoModelSerializer(all_video_meta, many=True)
+        result = response_serializer.data
+
+        logger.info(f"Exit : {func_name}")
+        return result
+    except Exception as err:
+        logger.error(f"Exit : {func_name} :: Error : {str(err)}")
+        raise err
+
+
+
 def add_youtube_video():
     func_name = get_func_name(inspect.currentframe())
     try:
         logger.info(f"Enter : {func_name}")
 
         logger.info("Get List of video from Youtube Data API")
-        videos_meta_list_response = get_youtube_video_data_list()
+        videos_meta_list_response = get_youtube_video_from_YT_Developer_API()
 
         bulk_insert_video_list = []
         
@@ -89,7 +139,7 @@ def add_youtube_video():
         logger.error(f"Exit : {func_name} :: Error : {str(err)}")
         raise err
 
-def get_youtube_video_data_list():
+def get_youtube_video_from_YT_Developer_API():
     func_name = get_func_name(inspect.currentframe())
     try:
         logger.info(f"Enter : {func_name}")
@@ -116,7 +166,7 @@ def get_youtube_video_data_list():
 
         result = response.json()
         logger.debug(f"No of videos: {len(result)}")
-        
+
         final_result = []
         for val in result.get('items'):
             val = val.get('snippet')
