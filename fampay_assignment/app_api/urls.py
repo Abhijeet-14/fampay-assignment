@@ -4,5 +4,5 @@ from . import views
 
 urlpatterns = [
     # Author
-    path("test/", views.Test.as_view(), name="test-api"),
+    path("youtubevideos/", views.YouTubeVideoData.as_view(), name="video-meta-api"),
 ]
