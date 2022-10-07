@@ -154,7 +154,7 @@ LOGGING = {
         "django.utils.autoreload": {
             "level": "CRITICAL",
         },
-        "fampay_assignment": {
+        "app_api": {
             "handlers": ["all_logs"],
             "level": "DEBUG",
         },

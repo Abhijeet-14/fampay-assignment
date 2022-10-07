@@ -1,3 +1,1 @@
-from django.db import models
-
-# Create your models here.
+from app_api.video_meta.models import *

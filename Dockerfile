@@ -16,6 +16,13 @@ RUN echo ${APP_NAME}
 COPY ./${APP_NAME}/.env .
 COPY . .
 
+# Remove/Replace logs & db.sqlite3 folder if exist
+RUN rm -r /app/${APP_NAME}/logs /app/${APP_NAME}/db.sqlite3
+RUN mkdir /app/${APP_NAME}/logs
+
 RUN ln -fs /app/${APP_NAME}/manage.py /app/manage.py
+
+RUN python manage.py makemigrations
+RUN python manage.py migrate
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
